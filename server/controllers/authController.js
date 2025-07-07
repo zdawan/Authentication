@@ -126,7 +126,10 @@ export const SendOTP = async () => {
     const user = await userModel.findById(userId);
 
     if (user.isAccountVerified) {
-      return res.json({ success: false, message: "Account already verified" });
+      return res.json({
+        success: false,
+        message: "Account already verified, Continue log in",
+      });
     }
 
     //generate OTP using random()
