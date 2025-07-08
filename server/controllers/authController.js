@@ -162,8 +162,11 @@ export const SendOTP = async () => {
 export const verifyEmail = async (req, res) => {
   const { userId, otp } = req.body;
 
-  if (!userId || !otp) {
-    return res.json({ success: false, message: "Missing details" });
+  if (!userId) {
+    return res.json({ success: false, message: "Missing details User ID" });
+  }
+  if (!otp) {
+    return res.json({ success: false, message: "Missing details OTP" });
   }
 
   try {
@@ -184,7 +187,7 @@ export const verifyEmail = async (req, res) => {
     }
 
     user.isAccountVerified = true; // making it true as verfied
-    user.verifyOtp = " ";
+    user.verifyOtp = " "; // Empty string
     user.verifyOtpExpireAt = 0;
 
     await user.save(); // saving the data
