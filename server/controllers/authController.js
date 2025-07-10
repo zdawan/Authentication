@@ -150,7 +150,7 @@ export const SendOTP = async () => {
     };
 
     //To send the mail
-    await trans.sendMail(mailOptions);
+    await trans.sendMail(mailOptions); // Interval to receive the mail
 
     res.json({ success: true, message: "Verification OTP sent to the mail" });
   } catch (error) {
@@ -160,7 +160,7 @@ export const SendOTP = async () => {
 
 // To verify the email on many scenarios if true or not
 export const verifyEmail = async (req, res) => {
-  const { userId, otp } = req.body;
+  const { userId, otp } = req.body; //Receiving from req.body
 
   if (!userId) {
     return res.json({ success: false, message: "Missing details User ID" });
