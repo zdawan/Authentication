@@ -7,10 +7,10 @@ const userAuth = async (req, res, next) => {
     return res.json({ success: false, message: "Not Authorized. Login Again" });
   }
 
-  // Simply need to be dltd
-  if (!user) {
-    return res.json({ success: false, message: "Not Authorized. Login Again" });
-  }
+  // // Simply need to be dltd
+  // if (!user) {
+  //   return res.json({ success: false, message: "Not Authorized. Login Again" });
+  // }
 
   //If token available
   try {
