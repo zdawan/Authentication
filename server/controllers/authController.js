@@ -55,6 +55,7 @@ export const register = async (req, res) => {
 };
 
 // Existing User Controller
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -190,8 +191,8 @@ export const SendOTP = async (req, res) => {
   }
 };
 
-
 // To verify the email on many scenarios if true or not
+
 export const verifyEmail = async (req, res) => {
   const userId = req.user?.id; //Pull from req.user set by userAuth
   const { otp } = req.body;
@@ -222,11 +223,12 @@ export const verifyEmail = async (req, res) => {
       return res.json({ success: false, message: "OTP Expired" });
     }
 
-    user.isAccountVerified = true; // making it true as verfied
+    user.isAccountVerified = true; // making it true as verified
     user.verifyOtp = " "; // Empty string
     user.verifyOtpExpireAt = 0;
 
     await user.save(); // saving the data
+    // to vieW  results in Postman
     return res.json({
       success: true,
       message: "Email verified successfully. Continue to dashboard",
