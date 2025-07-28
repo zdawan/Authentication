@@ -15,7 +15,7 @@ const authRouter = express.Router();
 authRouter.post("/register", register); // use post in Postman
 authRouter.post("/login", login);
 authRouter.post("/logout", logout);
-authRouter.post("/send-otp", userAuth, SendOTP);
+authRouter.post("/send-verify-otp", userAuth, SendOTP);
 authRouter.post("/verify-email", userAuth, verifyEmail);
 
 export default authRouter;

@@ -119,10 +119,48 @@ export const logout = async (req, res) => {
 
 // Send verification otp to the email
 // Controller func
-export const SendOTP = async () => {
+// export const SendOTP = async (req, res) => {
+//   try {
+//     //Verify user id
+//     const { userId } = req.body;
+//     const user = await userModel.findById(userId);
+
+//     if (user.isAccountVerified) {
+//       return res.json({
+//         success: false,
+//         message: "Account already verified, Continue log in",
+//       });
+//     }
+
+//     //generate OTP using random()
+//     const otp = String(Math.floor(100000 + Math.random() * 900000)); //value in float and cnvrt to string
+
+//     //Storing in db
+//     user.verifyOtp = otp;
+//     user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000; // expiry time is 1 day
+
+//     //Save the data
+//     await user.save();
+
+//     const mailOptions = {
+//       from: process.env.SENDER_EMAIL,
+//       to: user.email, // Logged in mail's
+//       subject: "Account verification OTP",
+//       text: `Your otp is ${otp}. Verify using the given otp to login`,
+//     };
+
+//     //To send the mail
+//     await trans.sendMail(mailOptions); // Interval to receive the mail
+
+//     res.json({ success: true, message: "Verification OTP sent to the mail" });
+//   } catch (error) {
+//     return res.json({ success: false, message: error.message });
+//   }
+// };
+//CHATGPT corrected code for sending otp to mail
+export const SendOTP = async (req, res) => {
   try {
-    //Verify user id
-    const { userId } = req.body;
+    const userId = req.user.id; // ✅ pulled from auth middleware
     const user = await userModel.findById(userId);
 
     if (user.isAccountVerified) {
@@ -132,35 +170,31 @@ export const SendOTP = async () => {
       });
     }
 
-    //generate OTP using random()
-    const OTP = String(Math.float(100000 + Math.random() * 900000)); //value in float and cnvrt to string
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
 
-    //Storing in db
     user.verifyOtp = otp;
-    user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000; // expiry time is 1 day
+    user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000;
 
-    //Save the data
     await user.save();
 
-    const mailOptions = {
+    await trans.sendMail({
       from: process.env.SENDER_EMAIL,
-      to: user.email, // Logged in mail's
+      to: user.email,
       subject: "Account verification OTP",
-      text: `Your otp is ${otp}. Verify using the given otp to login`,
-    };
+      text: `Your OTP is ${otp}.`,
+    });
 
-    //To send the mail
-    await trans.sendMail(mailOptions); // Interval to receive the mail
-
-    res.json({ success: true, message: "Verification OTP sent to the mail" });
+    res.json({ success: true, message: "Verification OTP sent to your email" });
   } catch (error) {
-    return res.json({ success: false, message: error.message });
+    res.json({ success: false, message: error.message });
   }
 };
 
+
 // To verify the email on many scenarios if true or not
 export const verifyEmail = async (req, res) => {
-  const { userId, otp } = req.body; //Receiving from req.body
+  const userId = req.user?.id; //Pull from req.user set by userAuth
+  const { otp } = req.body;
 
   if (!userId) {
     return res.json({ success: false, message: "Missing details User ID" });
@@ -174,6 +208,8 @@ export const verifyEmail = async (req, res) => {
     const user = await userModel.findById(userId);
 
     if (!user) {
+      // "success": false,
+      // "message": "Missing details User ID"
       return res.json({ success: false, message: "User not found" });
     }
 
