@@ -20,7 +20,7 @@ export const register = async (req, res) => {
     }
 
     // If All details available
-    const hashedPassword = await bcrypt.hash(password, 10); // 10 ill take less time to encrypt passord
+    const hashedPassword = await bcrypt.hash(password, 10); // 10 ill take less time to encrypt password
 
     //iF NEW user
     const user = new userModel({ name, email, password: hashedPassword });
@@ -235,5 +235,15 @@ export const verifyEmail = async (req, res) => {
     });
   } catch (error) {
     return res.json({ success: false, message: error.message });
+  }
+};
+
+// check user authorized
+
+export const isAuth = async (req, res) => {
+  try {
+    return res.json({ success: true });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
   }
 };
