@@ -4,6 +4,8 @@ import {
   login,
   logout,
   register,
+  resetOTP,
+  resetPass,
   SendOTP,
   verifyEmail,
 } from "../controllers/authController.js";
@@ -14,10 +16,12 @@ const authRouter = express.Router();
 
 //suffix after server.js authRouter.js
 authRouter.post("/register", register); // use post in Postman
-authRouter.post("/login", login);
-authRouter.post("/logout", logout);
-authRouter.post("/send-verify-otp", userAuth, SendOTP);
-authRouter.post("/verify-email", userAuth, verifyEmail);
-authRouter.post("/is-auth", userAuth, isAuth); // "path", module, auth
+authRouter.post("/login", login); // "path", module, 
+authRouter.post("/logout", logout); // "path", module, 
+authRouter.post("/send-verify-otp", userAuth, SendOTP); // "path", middle, module, 
+authRouter.post("/verify-email", userAuth, verifyEmail); // "path", middle, module, 
+authRouter.post("/is-auth", userAuth, isAuth); // "path", middle, module, 
+authRouter.post("/send-reset-otp", resetOTP); // "path", module, 
+authRouter.post("/reset-password", resetPass); // "path", module, 
 
 export default authRouter;

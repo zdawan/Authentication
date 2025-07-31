@@ -247,3 +247,86 @@ export const isAuth = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 };
+
+// Send pass reset otp
+
+export const resetOTP = async (req, res) => {
+  const { email } = req.body;
+
+  //email avail or not
+  if (!email) {
+    return res.json({ success: false, message: 'Email is required' });
+  }
+
+  try {
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.json({ success: false, message: 'User not found' });
+    }
+    
+    // Repeat process same as SendOTP controller
+       const otp = String(Math.floor(100000 + Math.random() * 900000));
+
+       user.resetOtp = otp;
+       user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000;
+
+       await user.save();
+
+       await trans.sendMail({
+         from: process.env.SENDER_EMAIL,
+         to: user.email,
+         subject: "Reset Password",
+         text: `Your OTP for resetting password is ${otp}. Use it to proceed to change password`,
+       });
+    
+    return res.json({success: true, message: `OTP send to your mail: ${email}`})
+  }
+  catch (error) {
+    return res.json({success: false, message: error.message})
+  }
+}
+
+// Reset user password
+
+export const resetPass = async (req, res) => {
+  const { email, otp, newPass } = req.body;
+
+  if (!email || !otp || !newPass) {
+    return res.json({ success: false, message: 'Email, OTP, pass are requried' });
+  }
+
+  try {
+    const user = await userModel.findOne({ email });
+
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    // Matching the sended OTp and entered OTP
+    if (user.resetOTP === " " || user.resetOTP !== otp) {
+      return res.json({ success: false, message: 'Invalid OTP' });
+    }
+
+    //Check if OTP expired
+    if (user.resetOtpExpireAt < Date.now()) {
+      return res.json({ success: false, message: 'OTP Expired' });
+    }
+
+    // bcrypt of new pass
+    const hashedPassword = await bcrypt.hash(newPass, 10);
+    
+    user.password = hashedPassword; //store new pass to db
+    user.resetOTP = " ";
+    user.resetOtpExpireAt = 0;
+
+    //Saves user info on db
+    await user.save();
+
+    // response
+    return res.json({ success: true, message: 'Password has been changed successfully' });
+  }
+  catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+}
