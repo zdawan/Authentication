@@ -293,7 +293,10 @@ export const resetPass = async (req, res) => {
   const { email, otp, newPass } = req.body;
 
   if (!email || !otp || !newPass) {
-    return res.json({ success: false, message: 'Email, OTP, pass are requried' });
+    return res.json({
+      success: false,
+      message: "Email, OTP, pass are required",
+    });
   }
 
   try {
@@ -303,30 +306,32 @@ export const resetPass = async (req, res) => {
       return res.json({ success: false, message: "User not found" });
     }
 
-    // Matching the sended OTp and entered OTP
-    if (user.resetOTP === " " || user.resetOTP !== otp) {
-      return res.json({ success: false, message: 'Invalid OTP' });
+    // Matching the sended OTP and entered OTP
+    if (user.resetOtp === " " || user.resetOtp !== otp) {
+      return res.json({ success: false, message: "Invalid OTP" });
     }
 
-    //Check if OTP expired
-    if (user.resetOtpExpireAt < Date.now()) {
-      return res.json({ success: false, message: 'OTP Expired' });
+    //Check if OTP expired from restOtp() func
+    if (user.verifyOtpExpireAt < Date.now()) {
+      return res.json({ success: false, message: "OTP Expired" });
     }
 
     // bcrypt of new pass
     const hashedPassword = await bcrypt.hash(newPass, 10);
-    
+
     user.password = hashedPassword; //store new pass to db
-    user.resetOTP = " ";
+    user.resetOtp = "";
     user.resetOtpExpireAt = 0;
 
     //Saves user info on db
     await user.save();
 
     // response
-    return res.json({ success: true, message: 'Password has been changed successfully' });
-  }
-  catch (error) {
+    return res.json({
+      success: true,
+      message: "Password has been changed successfully",
+    });
+  } catch (error) {
     return res.json({ success: false, message: error.message });
   }
 }
