@@ -2,6 +2,8 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import VEmail from "./pages/VEmail";
+import RPass from "./pages/RPass";
 
 const App = () => {
   return (
@@ -10,6 +12,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/email-verify" element={<VEmail />} />
+        <Route path="/reset-pass" element={<RPass />} />
       </Routes>
     </div>
   );
