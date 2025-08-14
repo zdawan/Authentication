@@ -8,6 +8,7 @@ import RPass from "./pages/RPass";
 const App = () => {
   return (
     // Routes for routing
+    // More info see Readme.md
     <div>
       <Routes>
         <Route path="/" element={<Home />} />

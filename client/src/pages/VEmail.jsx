@@ -1,11 +1,5 @@
 import React from "react";
 
-const VEmail = () => {
-  return (
-    <div>
-      <h2>Verify Email</h2>
-    </div>
-  );
-};
-
-export default VEmail;
+export default function VEmail() {
+  return <h1>Verify Email Page</h1>;
+}

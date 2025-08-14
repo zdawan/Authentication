@@ -1,11 +1,5 @@
 import React from "react";
 
-const RPass = () => {
-  return (
-    <div>
-      <h1>Reset PassWord</h1>
-    </div>
-  );
-};
-
-export default RPass;
+export default function RPass() {
+  return <h1>Reset Password Page</h1>;
+}
