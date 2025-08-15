@@ -16,12 +16,13 @@ export const getUser = async (req, res) => {
       return res.json({ success: false, message: "User not found" });
     }
 
-    //response
+    //response in postman
     res.json({
       //Fields which ill be shon on Postman for user details
       success: true,
       userData: {
-        name: user.name,
+        name: user.name, // name fetch from Mongodb
+        email: user.email, // email fetch from Mongodb
         isAccountVerified: user.isAccountVerified, // t or f
       },
     });
