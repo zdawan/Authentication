@@ -15,7 +15,7 @@ const Login = () => {
 
   //we use state to check that user is on sign-in or sign-up
   return (
-    <div className="flex items-center justify-center min-h-screen px-4 sm:px-0 bg-gradient-to-br from-blue-200 to-slate-500">
+    <div className="flex items-center justify-center min-h-screen px-4 sm:px-0 bg-gradient-to-br from-white to-slate-500">
       <img
         onClick={() => navigate("/")}
         src={assets.logo}
